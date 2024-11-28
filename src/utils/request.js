@@ -4,8 +4,8 @@ import axios from 'axios'
 // 2. 超时时间
 // 3. 请求拦截器 // 响应拦截器
 
-
-
+// 获取token
+import { getToken } from '@/utils/token'
 // 创建一个 axios 实例
 const request = axios.create({
   // 根域名
@@ -16,7 +16,15 @@ const request = axios.create({
 
 // 添加请求拦截器
 // 再请求发送之前 做拦截 插入一些自定义的配置 [参数处理]
-request.interceptors.response.use((config) => {
+request.interceptors.request.use((config) => {
+  // 操作这个config 注入token数据
+  //1. 获取到token
+  const token = getToken()
+  //2. 按照后端的格式要求做token拼接
+  if (token) {
+    // config.headers.Authorization 为 axios的固定写法    Bearer 是由后端决定的拼接方式
+    config.headers.Authorization = `Bearer ${token}`
+  }
   return config
 }, (error) => {
   return Promise.reject(error)
