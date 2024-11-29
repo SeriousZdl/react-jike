@@ -9,6 +9,7 @@ import './index.scss'
 
 import { Outlet } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 
 const { Header, Sider } = Layout
 
@@ -20,22 +21,29 @@ const items = [
   },
   {
     label: '文章管理',
-    key: 'article',
+    key: '/article',
     icon: <DiffOutlined />,
   },
   {
     label: '创建文章',
-    key: 'publish',
+    key: '/publish',
     icon: <EditOutlined />,
   },
 ]
 
 const GeekLayout = () => {
+
   const navigate = useNavigate()
   const onMenuClick = (route) => {
     const path = route.key
     navigate(path)
   }
+
+  // 反向高亮 
+  // 1. 获取当前路由路径
+  const location = useLocation()
+  const selectedkey = location.pathname
+  
   return (
     <Layout>
       <Header className="header">
@@ -55,7 +63,7 @@ const GeekLayout = () => {
           onClick={onMenuClick}
             mode="inline"
             theme="dark"
-            defaultSelectedKeys={['1']}
+            selectedKeys={[selectedkey]}
             items={items}
             
             style={{ height: '100%', borderRight: 0 }}></Menu>
