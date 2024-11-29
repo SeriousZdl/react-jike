@@ -1,6 +1,10 @@
 // 嵌套语法 只有在 scss 中可以使用   sass编译器 相当于把 scss语言 翻译成 浏览器能看懂的原生css语言
-body{
-  div{
-    color: aqua;
-  }
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+#root {
+  height: 100%;
 }
