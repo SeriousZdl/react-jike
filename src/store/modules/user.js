@@ -1,7 +1,7 @@
 // 和用户相关的状态管理
 import { createSlice } from '@reduxjs/toolkit'
 import { request } from '@/utils'
-import { setToken as _setToken, getToken } from '@/utils'
+import { setToken as _setToken, getToken, removeToken } from '@/utils'
 
 const userStore = createSlice({
   name: 'user',
@@ -18,14 +18,23 @@ const userStore = createSlice({
       // localstorage 也存一份 _setToken不是我们定义的函数 是我们封装的存储localstroage函数
       _setToken(action.payload)
     },
+
     setUserInfo (state, action) {
       state.userInfo = action.payload
+    },
+
+    clearToken (state) {
+      // 清除本地的保存token
+      state.token = ''
+      // 清除Redux中的token
+      state.userInfo = {}
+      removeToken()
     }
 }
 })
 
 // 解构出actionCreater
-const {setToken, setUserInfo} = userStore.actions
+const {setToken, setUserInfo, clearToken} = userStore.actions
 
 // 获取reducer  函数
 const userReducer = userStore.reducer
@@ -49,6 +58,8 @@ const fetchUserInfo = () => {
   }
 }
 
-export { fetchLogin, fetchUserInfo, setToken }
+
+
+export { fetchLogin, fetchUserInfo, setToken, clearToken }
 
 export default userReducer

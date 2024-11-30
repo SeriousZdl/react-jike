@@ -14,6 +14,7 @@ import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { fetchUserInfo } from '@/store/modules/user'
 import { useSelector } from 'react-redux'
+import { clearToken } from '@/store/modules/user'
 
 const { Header, Sider } = Layout
 
@@ -56,6 +57,12 @@ const GeekLayout = () => {
     )
   },[dispatch])
 
+
+  // 退出登录
+  const onConfirm = () => {
+    dispatch(clearToken())
+    navigate('/login')
+  }
   const name = useSelector(state => state.user.userInfo.name)
   return (
     <Layout>
@@ -64,7 +71,7 @@ const GeekLayout = () => {
         <div className="user-info">
           <span className="user-name">{name}</span>
           <span className="user-logout">
-            <Popconfirm title="是否确认退出？" okText="退出" cancelText="取消">
+            <Popconfirm title="是否确认退出？" okText="退出" cancelText="取消" onConfirm={onConfirm}>
               <LogoutOutlined /> 退出
             </Popconfirm>
           </span>
