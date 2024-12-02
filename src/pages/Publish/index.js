@@ -15,10 +15,24 @@ import './index.scss'
 
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
+import { useState } from 'react'
+import { getchannelAPI } from '../../apis/article'
+import { useEffect } from 'react'
 
 const { Option } = Select
 
 const Publish = () => {
+// 获取频道列表
+const [channelList, setChannelList] =  useState([])
+useEffect(() => {
+  // 1. 封装函数 
+   const getChannelList = async () => {
+    const res = await getchannelAPI()
+    setChannelList(res.data.channels)
+  }
+  // 2. 调用函数
+  getChannelList()
+},[])
   return (
     <div className="publish">
       <Card
@@ -48,7 +62,13 @@ const Publish = () => {
             rules={[{ required: true, message: '请选择文章频道' }]}
           >
             <Select placeholder="请选择文章频道" style={{ width: 400 }}>
-              <Option value={0}>推荐</Option>
+
+              {/* value 属性用户选中之后会自动收集起来作为接口的提交字段 */}
+              {channelList.map((item) => {
+                return <Option key={item.id} value={item.id}>{item.name}</Option>
+              })}
+           {/* <Option value={0}>推荐</Option> */}
+
             </Select>
           </Form.Item>
           <Form.Item
