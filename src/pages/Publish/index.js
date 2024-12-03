@@ -18,6 +18,7 @@ import 'react-quill/dist/quill.snow.css'
 import { useState } from 'react'
 import { getchannelAPI } from '../../apis/article'
 import { useEffect } from 'react'
+import { createArticleAPI } from '../../apis/article'
 
 const { Option } = Select
 
@@ -33,6 +34,29 @@ useEffect(() => {
   // 2. 调用函数
   getChannelList()
 },[])
+
+  // 提交表单
+  
+  const [content, setContent] = useState('')
+  const onFinish = (formValue) => {
+    // 1. 按照接口文档的格式处理收集到的表单数据
+    console.log(formValue);
+    // // 展开formValue
+    const { title,  channel_id } = formValue
+
+    const reqData = {
+       title,
+       content,
+       cover: {
+         type: 0,
+         images: []
+       },
+       channel_id
+    }
+
+    // 2. 调用接口实现发布文章
+     createArticleAPI(reqData)
+  }
   return (
     <div className="publish">
       <Card
@@ -48,6 +72,7 @@ useEffect(() => {
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 16 }}
           initialValues={{ type: 1 }}
+          onFinish={onFinish}
         >
           <Form.Item
             label="标题"
@@ -71,11 +96,6 @@ useEffect(() => {
 
             </Select>
           </Form.Item>
-          <Form.Item
-            label="内容"
-            name="content"
-            rules={[{ required: true, message: '请输入文章内容' }]}
-          ></Form.Item>
 
           {/* 富文本编辑器 */}
           <Form
@@ -88,6 +108,8 @@ useEffect(() => {
               rules={[{ required: true, message: '请输入文章内容' }]}
             >
               <ReactQuill
+                value={content}
+                onChange={setContent}
                 className="publish-quill"
                 theme="snow"
                 placeholder="请输入文章内容"
