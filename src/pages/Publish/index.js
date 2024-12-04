@@ -63,6 +63,14 @@ const Publish = () => {
   const onChange = (value) => {  
     setImageList(value.fileList)
   }
+
+  //  切换封面类型
+  const [imageType, setImageType] = useState(1)
+    // 选择封面类型 三图type为3 单图type为0 无图 type为0
+  const onTypeChange = (value) => {
+    console.log(value.target.value);//类型 1 3 0
+  setImageType(value.target.value)
+  }
   return (
     <div className="publish">
       <Card
@@ -77,7 +85,7 @@ const Publish = () => {
         <Form
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 16 }}
-          initialValues={{ type: 1 }}
+          initialValues={{ type: 1 }}// 设置图片上传类型的 默认值
           onFinish={onFinish}
         >
           <Form.Item
@@ -103,28 +111,38 @@ const Publish = () => {
             </Select>
           </Form.Item>
 
+
+
           <Form.Item label="封面">
             <Form.Item name="type">
-              <Radio.Group>
+              <Radio.Group onChange={onTypeChange}>
                 <Radio value={1}>单图</Radio>
                 <Radio value={3}>三图</Radio>
                 <Radio value={0}>无图</Radio>
               </Radio.Group>
             </Form.Item>
-            {/* listType: 决定选择文件框的外观样式
+
+
+            {/* 
+            Upload组件的  
+                listType: 决定选择文件框的外观样式
                 showUploadList: 控制显示上传列表
                 */}
-            <Upload
-              listType="picture-card"
-              showUploadList
-              action={'htttp://geek.itheima.net/v1_0/upload'}
-              name='image'
-              onChange={onChange}
-            >
-              <div style={{ marginTop: 8 }}>
-                <PlusOutlined />
-              </div>
-            </Upload>
+                {
+                  imageType > 0 &&  
+                   <Upload
+                  listType="picture-card"
+                  showUploadList
+                  action={'htttp://geek.itheima.net/v1_0/upload'}
+                  name='image'
+                  onChange={onChange}
+                >
+                  <div style={{ marginTop: 8 }}>
+                    <PlusOutlined />
+                  </div>
+                </Upload>
+                }
+
           </Form.Item>
 
           {/* 富文本编辑器 */}
