@@ -23,39 +23,45 @@ import { createArticleAPI } from '../../apis/article'
 const { Option } = Select
 
 const Publish = () => {
-// 获取频道列表
-const [channelList, setChannelList] =  useState([])
-useEffect(() => {
-  // 1. 封装函数 
-   const getChannelList = async () => {
-    const res = await getchannelAPI()
-    setChannelList(res.data.channels)
-  }
-  // 2. 调用函数
-  getChannelList()
-},[])
+  // 获取频道列表
+  const [channelList, setChannelList] = useState([])
+  useEffect(() => {
+    // 1. 封装函数 
+    const getChannelList = async () => {
+      const res = await getchannelAPI()
+      setChannelList(res.data.channels)
+    }
+    // 2. 调用函数
+    getChannelList()
+  }, [])
 
   // 提交表单
-  
+
   const [content, setContent] = useState('')
   const onFinish = (formValue) => {
     // 1. 按照接口文档的格式处理收集到的表单数据
     console.log(formValue);
     // // 展开formValue
-    const { title,  channel_id } = formValue
+    const { title, channel_id } = formValue
 
     const reqData = {
-       title,
-       content,
-       cover: {
-         type: 0,
-         images: []
-       },
-       channel_id
+      title,
+      content,
+      cover: {
+        type: 0,
+        images: []
+      },
+      channel_id
     }
 
     // 2. 调用接口实现发布文章
-     createArticleAPI(reqData)
+    createArticleAPI(reqData)
+    
+  }
+  // 上传图片回调
+  const [imageList, setImageList] = useState([])
+  const onChange = (value) => {  
+    setImageList(value.fileList)
   }
   return (
     <div className="publish">
@@ -92,9 +98,33 @@ useEffect(() => {
               {channelList.map((item) => {
                 return <Option key={item.id} value={item.id}>{item.name}</Option>
               })}
-           {/* <Option value={0}>推荐</Option> */}
+              {/* <Option value={0}>推荐</Option> */}
 
             </Select>
+          </Form.Item>
+
+          <Form.Item label="封面">
+            <Form.Item name="type">
+              <Radio.Group>
+                <Radio value={1}>单图</Radio>
+                <Radio value={3}>三图</Radio>
+                <Radio value={0}>无图</Radio>
+              </Radio.Group>
+            </Form.Item>
+            {/* listType: 决定选择文件框的外观样式
+                showUploadList: 控制显示上传列表
+                */}
+            <Upload
+              listType="picture-card"
+              showUploadList
+              action={'htttp://geek.itheima.net/v1_0/upload'}
+              name='image'
+              onChange={onChange}
+            >
+              <div style={{ marginTop: 8 }}>
+                <PlusOutlined />
+              </div>
+            </Upload>
           </Form.Item>
 
           {/* 富文本编辑器 */}
