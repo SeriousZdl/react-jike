@@ -125,7 +125,7 @@ const Publish = () => {
 
             {/* 
             Upload组件的  
-                listType: 决定选择文件框的外观样式
+                listType: 决定选择文件框的外观样式  
                 showUploadList: 控制显示上传列表
                 */}
                 {
@@ -136,6 +136,7 @@ const Publish = () => {
                   action={'htttp://geek.itheima.net/v1_0/upload'}
                   name='image'
                   onChange={onChange}
+                  maxCount={imageType}
                 >
                   <div style={{ marginTop: 8 }}>
                     <PlusOutlined />
