@@ -7,7 +7,8 @@ import {
   Input,
   Upload,
   Space,
-  Select
+  Select,
+  message
 } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
@@ -39,6 +40,8 @@ const Publish = () => {
 
   const [content, setContent] = useState('')
   const onFinish = (formValue) => {
+    // 校验封面类型imageType 是否和实际的图片列表imageList数量是相等的
+    if( imageList.length !== imageType) return message.warning('封面类型和图片数量不匹配')
     // 1. 按照接口文档的格式处理收集到的表单数据
     console.log(formValue);
     // // 展开formValue
@@ -48,12 +51,12 @@ const Publish = () => {
       title,
       content,
       cover: {
-        type: 0,
-        images: []
+        type: imageType, //封面模式
+        images: imageList.map(item => item.response.data.url)   //图片列表 后端要求 数组[https://geek.itheima.net/uploads/16886878.jpg] 格式
       },
       channel_id
     }
-
+    
     // 2. 调用接口实现发布文章
     createArticleAPI(reqData)
     
@@ -63,13 +66,13 @@ const Publish = () => {
   const onChange = (value) => {  
     setImageList(value.fileList)
   }
-
+  
   //  切换封面类型
   const [imageType, setImageType] = useState(1)
-    // 选择封面类型 三图type为3 单图type为0 无图 type为0
+  // 选择封面类型 三图type为3 单图type为0 无图 type为0
   const onTypeChange = (value) => {
     console.log(value.target.value);//类型 1 3 0
-  setImageType(value.target.value)
+    setImageType(value.target.value)
   }
   return (
     <div className="publish">
@@ -133,7 +136,7 @@ const Publish = () => {
                    <Upload
                   listType="picture-card"
                   showUploadList
-                  action={'htttp://geek.itheima.net/v1_0/upload'}
+                  action={'http://geek.itheima.net/v1_0/upload'}
                   name='image'
                   onChange={onChange}
                   maxCount={imageType}
